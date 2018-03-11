@@ -94,6 +94,12 @@ declare namespace Keycloak {
 		 * @default standard
 		 */
 		flow?: KeycloakFlow;
+
+        /**
+		 *	Store tokens in local storage to avoid unnecessary redirect if
+		 *	tokens are still valid
+         */
+		localStorage?: boolean;
 	}
 
 	interface KeycloakLoginOptions {

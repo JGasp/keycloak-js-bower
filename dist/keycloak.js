@@ -26,6 +26,7 @@
         var adapter;
         var refreshQueue = [];
         var callbackStorage;
+        var useLocalStorage = false;
 
         var loginIframe = {
             enable: true,
@@ -41,6 +42,15 @@
         }
 
         kc.init = function (initOptions) {
+            if(initOptions.localStorage){
+                if(typeof(Storage) !== "undefined"){
+                    useLocalStorage = true;
+                } else {
+                    console.log("Web browser does not support local storage");
+                }
+            }
+
+
             kc.authenticated = false;
 
             callbackStorage = createCallbackStorage();
@@ -156,6 +166,15 @@
             }
 
             function processInit() {
+
+                if(useLocalStorage) {
+                    if(!initOptions.token && !initOptions.refreshToken) {
+                        initOptions.token = localStorage.getItem("token")
+                        initOptions.refreshToken = localStorage.getItem("refreshToken")
+                        initOptions.idToken = localStorage.getItem("idToken")
+                    }
+                }
+
                 var callback = parseCallback(window.location.href);
 
                 if (callback) {
@@ -647,6 +666,12 @@
         }
 
         function setToken(token, refreshToken, idToken, timeLocal) {
+            if (useLocalStorage) {
+                localStorage.setItem("token", token)
+                localStorage.setItem("refreshToken", refreshToken)
+                localStorage.setItem("idToken", idToken)
+            }
+
             if (kc.tokenTimeoutHandle) {
                 clearTimeout(kc.tokenTimeoutHandle);
                 kc.tokenTimeoutHandle = null;
