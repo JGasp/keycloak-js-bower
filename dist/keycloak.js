@@ -292,6 +292,12 @@
         }
 
         kc.logout = function(options) {
+            if(useLocalStorage){
+                localStorage.removeItem("token");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("idToken");
+            }
+
             return adapter.logout(options);
         }
 
